@@ -50,14 +50,16 @@ typedef long double ld;
 #endif
 /*
 |------------------------------------------------------------------
-|   -> Trie for small case letters implementation
+|   -> Trie implementation -> just change below params
 |------------------------------------------------------------------
 */
 
+#define T_SZ 26
+#define T_BS (char)'a'
 
 struct TrieNode {
     char val;
-    struct TrieNode* m[26];
+    struct TrieNode* m[T_SZ];
     bool end;
 };
 
@@ -66,7 +68,7 @@ TrieNode* mkNode(char val) {
     TrieNode* pt = (TrieNode*)malloc(sizeof(TrieNode));
     pt->val = val;
     pt->end = false;
-    for(int i = 0; i < 26; i++)
+    for(int i = 0; i < T_SZ; i++)
         pt->m[i] = NULL;
     
     return pt;
@@ -77,7 +79,7 @@ void insert(string str, TrieNode* root, int idx) {
     if(idx == str.size())
         return;
     
-    int pos = str[idx] - 'a';
+    int pos = str[idx] - T_BS;
     
     if(root->m[pos] == NULL)
         root->m[pos] = mkNode(str[idx]);
@@ -90,7 +92,7 @@ void insert(string str, TrieNode* root, int idx) {
 
 // Search if element exists or not
 bool search(string str, TrieNode* root, int idx) {
-    int pos = str[idx] - 'a';
+    int pos = str[idx] - T_BS;
     if(idx == str.size() and root->end == true)
         return true;
     if(root->m[pos] != NULL)
@@ -101,10 +103,10 @@ bool search(string str, TrieNode* root, int idx) {
 
 // Delete a word
 TrieNode* del(TrieNode* root, string str, int idx) {
-    int pos = str[idx] - 'a';
+    int pos = str[idx] - T_BS;
     if(idx == str.size()) {
         root->end = false;
-        for(int i = 0; i < 26; i++) {
+        for(int i = 0; i < T_SZ; i++) {
             if(root->m[i] != NULL) {
                 return root;
             }
@@ -116,7 +118,7 @@ TrieNode* del(TrieNode* root, string str, int idx) {
         return root;
     root->m[pos] = del(root->m[pos], str, idx + 1);
     
-    for(int i = 0; i < 26; i++) {
+    for(int i = 0; i < T_SZ; i++) {
         if(root->m[i] != NULL) {
             return root;
         }
@@ -132,10 +134,10 @@ void suggs(TrieNode* root, vector<string> &ans, string &loc, string str, int idx
     if(root->end)
         ans.pb(loc);
     if(idx < str.size()) {
-        suggs(root->m[str[idx] - 'a'], ans, loc, str, idx + 1);
+        suggs(root->m[str[idx] - T_BS], ans, loc, str, idx + 1);
         return;
     }
-    for(int i = 0; i < 26; i++) {
+    for(int i = 0; i < T_SZ; i++) {
         if(root->m[i] != NULL) {
             suggs(root->m[i], ans, loc, str, idx + 1);
         }
@@ -154,7 +156,7 @@ int main() {
     
     deb(search("abd", root, 0));
     
-    del(root, "abd", 0);
+    // del(root, "abd", 0);
     
     deb(search("abd", root, 0));
     deb(search("abc", root, 0));

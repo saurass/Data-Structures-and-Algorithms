@@ -56,7 +56,7 @@ struct DsuNode {
 
 DsuNode mkSet(int val) {
     DsuNode tp;
-    tp.weight = 0;
+    tp.weight = 1;
     tp.parent = val;
     
     return tp;
